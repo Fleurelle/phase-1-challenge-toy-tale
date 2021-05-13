@@ -42,7 +42,7 @@ let toyHeader = document.createElement('h2')
 
 let toyImg = document.createElement('img')
   toyImg.src = toy.image
-  toy.className = "toy-avatar"
+  toyImg.className = "toy-avatar"
 
 let toyP = document.createElement('p')
   toyP.innerText = `${toyP.likes} Likes`
