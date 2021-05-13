@@ -1,8 +1,13 @@
 let addToy = false;
 
+const toyURL = 'http://localhost:3000/toys'
+
 document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.querySelector("#new-toy-btn");
   const toyFormContainer = document.querySelector(".container");
+   
+  fetchingToys()
+
   addBtn.addEventListener("click", () => {
     // hide & seek with the form
     addToy = !addToy;
@@ -13,3 +18,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+//make a GET request to fetch all the toy objects 
+//get and render all the toys
+function fetchingToys(){
+  fetch(toyURL)
+    .then(res => res.json())
+    .then(toyList => toyList.forEach(toy => renderToy(toy)))
+    //toy is the element created. i.e in toyList, for each created element do...
+
+}
+
+function renderToy(toy){
+let toyCollection = document.querySelector("#toy-collection")
+
+//make a div class for each toy and add it to the toy collection div
+let toyDiv = document.createElement('div')
+  toyDiv.className = "card"
+
+//Add toy info to the card 
+let toyHeader = document.createElement('h2')
+  toyHeader.innerText = toy.name
+
+let toyImg = document.createElement('img')
+  toyImg.src = toy.image
+  toy.className = "toy-avatar"
+
+let toyP = document.createElement('p')
+  toyP.innerText = `${toyP.likes} Likes`
+
+let toyButton = document.createElement('button')
+  toyButton.innerText = "Like <3"
+  toyButton.className = "like-btn"
+  // toyButton.id = toyButton.id
+  
+//put it all together in the div
+//Append can be used for multiple elements
+toyDiv.append(toyHeader, toyImg, toyP, toyButton)
+//appendChild is for a single element
+toyCollection.appendChild(toyDiv)
+}
