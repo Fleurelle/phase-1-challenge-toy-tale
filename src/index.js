@@ -24,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-//make a GET request to fetch all the toy objects 
-//get and render all the toys
+//FETCH ANDY'S TOYS
 function fetchingToys(){
   fetch(toyURL)
     .then(res => res.json())
@@ -34,7 +33,7 @@ function fetchingToys(){
 
 }
 
-//Add toy info to the card 
+//ADD TOY INFO TO THE CARD
 function renderToy(toy){
 let toyCollection = document.querySelector("#toy-collection")
 
@@ -51,13 +50,19 @@ let toyImg = document.createElement('img')
   toyImg.className = "toy-avatar"
 
 let toyP = document.createElement('p')
-  toyP.innerText = `${toyP.likes} Likes`
+  toyP.innerText = `${toy.likes} Likes`
 
 let toyButton = document.createElement('button')
   toyButton.innerText = "Like <3"
   toyButton.className = "like-btn"
-  // toyButton.id = toyButton.id
   toyButton.id = toy.id
+
+  //for likes
+  toyButton.addEventListener("click", (event) => {
+    toyLikes(event, toyP) 
+  })
+
+
   
 //put it all together in the div
 //Append can be used for multiple elements
@@ -66,7 +71,7 @@ toyDiv.append(toyHeader, toyImg, toyP, toyButton)
 toyCollection.appendChild(toyDiv)
 }
 
-//Add a new toy
+//ADD A NEW TOY
 function newToy(event) {
   event.preventDefault()
   console.log(event);
@@ -74,7 +79,8 @@ function newToy(event) {
   //grab new toy data from the forms
   let toyData = {
     name: event.target.name.value,
-    image: event.target.image.value
+    image: event.target.image.value,
+    likes: 0
   }
   // debugger
 
@@ -92,5 +98,33 @@ function newToy(event) {
   
     //clear the form once new toy has been added
     document.querySelector(".add-toy-form").reset()
+}
+
+//INCREASE A TOY'S LIKES
+function toyLikes(event, toyP){
+  //1. need event listener for like button.
+
+  //2. Capture the toy's ID. 
+  //Remember that event.currentTarget always returns the element that the listener was attached to
+  let captureId = event.target.id
+
+  //3.Calculate the number of likes
+    //a. need to print the number of likes on the page then increase it 
+    //.split on the space and grab the first value
+  let likes = parseInt(toyP.innerText.split(" ")[0]) + 1;
+  console.log(likes)
+
+  //3. FETCH, PATCH stuff
+  fetch(`${toyURL}/${captureId}` ,{
+    method:"PATCH",
+    headers:{
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({
+      "likes": likes
+  }) 
+}).then (res => res.json())
+  .then (toy => toyP.innerText = `${toy.likes} Likes`)
 }
 

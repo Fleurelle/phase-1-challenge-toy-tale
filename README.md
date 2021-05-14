@@ -138,8 +138,8 @@ look very similar to our "POST" request **except** that we need to include the
 To get this working, you will need to add an event listener to each toy's "Like"
 button. When the button is clicked for a toy, your code should:
 
-1) capture that toy's id,
-2) calculate the new number of likes,
+<!-- 1) capture that toy's id, -->
+<!-- 2) calculate the new number of likes, -->
 3) submit the `patch` request, and
 4) update the toy's card in the DOM based on the `Response` returned by the
    fetch request.
