@@ -5,8 +5,13 @@ const toyURL = 'http://localhost:3000/toys'
 document.addEventListener("DOMContentLoaded", () => {
   const addBtn = document.querySelector("#new-toy-btn");
   const toyFormContainer = document.querySelector(".container");
-   
+
   fetchingToys()
+
+  //where to put new toys
+  const addNewToy = document.querySelector(".add-toy-form")
+  console.log(addNewToy) 
+  addNewToy.addEventListener("submit", newToy)
 
   addBtn.addEventListener("click", () => {
     // hide & seek with the form
@@ -29,6 +34,7 @@ function fetchingToys(){
 
 }
 
+//Add toy info to the card 
 function renderToy(toy){
 let toyCollection = document.querySelector("#toy-collection")
 
@@ -51,6 +57,7 @@ let toyButton = document.createElement('button')
   toyButton.innerText = "Like <3"
   toyButton.className = "like-btn"
   // toyButton.id = toyButton.id
+  toyButton.id = toy.id
   
 //put it all together in the div
 //Append can be used for multiple elements
@@ -58,3 +65,32 @@ toyDiv.append(toyHeader, toyImg, toyP, toyButton)
 //appendChild is for a single element
 toyCollection.appendChild(toyDiv)
 }
+
+//Add a new toy
+function newToy(event) {
+  event.preventDefault()
+  console.log(event);
+
+  //grab new toy data from the forms
+  let toyData = {
+    name: event.target.name.value,
+    image: event.target.image.value
+  }
+  // debugger
+
+  // POST request - building an object to send to server
+  fetch(toyURL, {
+    method:"POST",
+    headers:{
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(toyData)
+  }).then(res => res.json())
+    .then(toy => renderToy(toy)) //we simply want this to be placed in with 
+    //the other toys
+  
+    //clear the form once new toy has been added
+    document.querySelector(".add-toy-form").reset()
+}
+
